@@ -1,4 +1,4 @@
-# Generdor Emir Jorge
+# Generador Emir Jorge
 
 Generador de keys para instalar el generador usando el link oficial
 ```
