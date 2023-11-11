@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IVAR="/etc/http-instas"
-# FUNCAO PARA DETERMINAR O IP
+# FUNCIÓN PARA DETERMINAR IP
 remover_key_usada () {
 local DIR="/etc/http-shell"
 i=0
@@ -28,23 +28,23 @@ echo "$(cat /etc/MEU_IP)"
 fi
 }
 
-#OFUSCATE
+#OFUSCAR
 ofus () {
 unset txtofus
 number=$(expr length $1)
 for((i=1; i<$number+1; i++)); do
 txt[$i]=$(echo "$1" | cut -b $i)
 case ${txt[$i]} in
-".")txt[$i]="+";;
-"+")txt[$i]=".";;
-"1")txt[$i]="@";;
-"@")txt[$i]="1";;
-"2")txt[$i]="?";;
-"?")txt[$i]="2";;
-"3")txt[$i]="%";;
-"%")txt[$i]="3";;
-"/")txt[$i]="K";;
-"K")txt[$i]="/";;
+".") txt[$i]="+";;
+"+") txt[$i]=".";;
+"1") txt[$i]="@";;
+"@") txt[$i]="1";;
+"2") txt[$i]="?";;
+"?") txt[$i]="2";;
+"3") txt[$i]="%";;
+"%") txt[$i]="3";;
+"/") txt[$i]="K";;
+"K") txt[$i]="/";;
 esac
 txtofus+="${txt[$i]}"
 done
@@ -52,44 +52,46 @@ echo "$txtofus" | rev
 }
 
 
-# LOOP PARA EXECUCAO DO PROGRAMA
+# BUCLE PARA EJECUCIÓN DEL PROGRAMA
 listen_fun () {
 local PORTA="8888" && local PROGRAMA="/bin/http-server.sh"
 while true; do nc.traditional -l -p "$PORTA" -e "$PROGRAMA"; done
 }
-# SERVER EXECUTAVEL
+# SERVIDOR EJECUTABLE
 server_fun () {
-DIR="/etc/http-shell" #DIRETORIO DAS KEYS ARMAZENADAS
+DIR="/etc/http-shell" #DIRECTORIO DE LLAVES ALMACENADAS
 if [[ ! -d $DIR ]]; then mkdir $DIR; fi
 read URL
-KEY=$(echo $URL|cut -d' ' -f2|cut -d'/' -f2) && [[ ! $KEY ]] && KEY="ERRO" #KEY
-ARQ=$(echo $URL|cut -d' ' -f2|cut -d'/' -f3)  && [[ ! $ARQ ]] && ARQ="ERRO" #LISTA INSTALACAO
-USRIP=$(echo $URL|cut -d' ' -f2|cut -d'/' -f4) && [[ ! $USRIP ]] && USRIP="ERRO" #IP DO USUARIO
-REQ=$(echo $URL|cut -d' ' -f2|cut -d'/' -f5) && [[ ! $REQ ]] && REQ="ERRO"
+KEY=$(echo $URL|cut -d' ' -f2|cut -d'/' -f2) && [[ ! $KEY ]] && KEY="ERROR" #KEY
+ARQ=$(echo $URL|cut -d' ' -f2|cut -d'/' -f3)  && [[ ! $ARQ ]] && ARQ="ERROR" #LISTA DE INSTALACIÓN
+USRIP=$(echo $URL|cut -d' ' -f2|cut -d'/' -f4) && [[ ! $USRIP ]] && USRIP="ERROR" #IP DE USUARIO
+SO=$(echo $URL|cut -d' ' -f2|cut -d'/' -f5) && [[ ! $SO ]] && SO="ERROR DE SISTEMA OPERATIVO"
+UUID=$(echo $URL|cut -d' ' -f2|cut -d'/' -f6) && [[ ! $UUID ]] && UUID="SERIAL QR NO RECIBIDO"
 echo "KEY: $KEY" >&2
 echo "LISTA: $ARQ" >&2
 echo "IP: $USRIP" >&2
-echo "REQ: $REQ" >&2
-DIRETORIOKEY="$DIR/$KEY" # DIRETORIO DA KEY
-LISTADEARQUIVOS="$DIRETORIOKEY/$ARQ" # LISTA DE ARQUIVOS
-if [[ -d "$DIRETORIOKEY" ]]; then #VERIFICANDO SE A CHAVE EXISTE
-  if [[ -e "$DIRETORIOKEY/$ARQ" ]]; then #VERIFICANDO LISTA DE ARQUIVOS
-  #ENVIA LISTA DE DOWLOADS
+echo "SO: $SO" >&2
+echo "UUID: $UUID" >&2
+DIRETORIOKEY="$DIR/$KEY" # DIRECTORIO CLAVE
+LISTADEARQUIVOS="$DIRETORIOKEY/$ARQ" # LISTA DE ARCHIVOS
+if [[ -d "$DIRETORIOKEY" ]]; then #COMPROBANDO SI LA LLAVE EXISTE
+  if [[ -e "$DIRETORIOKEY/$ARQ" ]]; then #COMPROBAR LA LISTA DE ARCHIVOS
+  #ENVIA LISTA DE DESCARGAS
   FILE="$DIRETORIOKEY/$ARQ" 
   STATUS_NUMBER="200"
   STATUS_NAME="Found"
   ENV_ARQ="True"
   fi
-  if [[ -e "$DIRETORIOKEY/FERRAMENTA" ]]; then #VERIFICA SE A KEY E FERRAMETA
-   if [[ ${USRIP} != "ERRO" ]]; then #SE FOR FERRAMENTA O IP NAO DEVE SER ENVIADO
+  if [[ -e "$DIRETORIOKEY/FERRAMENTA" ]]; then #VERIFICA SI LA CLAVE Y LA HERRAMIENTA EXISTEN
+   if [[ ${USRIP} != "ERROR" ]]; then #SI ES UNA HERRAMIENTA, LA IP NO DEBE SER ENVIADA
     FILE="${DIR}/ERROR-KEY"
-    echo "FERRAMENTA KEY!" > ${FILE}
+    echo "CLAVE DE HERRAMIENTA!" > ${FILE}
     ENV_ARQ="False"
    fi
  else
-   if [[ ${USRIP} = "ERRO" ]]; then #VERIFICA SE FOR INSTALACAO O IP DEVE SER ENVIADO
+   if [[ ${USRIP} = "ERROR" ]]; then #VERIFICA SI ES UNA INSTALACIÓN, LA IP DEBE SER ENVIADA
     FILE="${DIR}/ERROR-KEY"
-    echo "KEY DE INSTALA�AO!" > ${FILE}
+    echo "CLAVE DE INSTALACIÓN!" > ${FILE}
     ENV_ARQ="False"
    fi
  fi
@@ -101,7 +103,7 @@ else
   STATUS_NAME="Found"
   ENV_ARQ="False"
 fi
-#ENVIA DADOS AO USUARIO
+#ENVIAR DATOS AL USUARIO
 cat << EOF
 HTTP/1.1 $STATUS_NUMBER - $STATUS_NAME
 Date: $(date)
@@ -111,23 +113,23 @@ Connection: close
 Content-Type: text/html; charset=utf-8
 $(cat "$FILE")
 EOF
-#FINALIZA O ENVIO
-if [[ $ENV_ARQ != "True" ]]; then exit; fi #FINALIZA REQUEST CASO NAO ENVIE ARQUIVOS
+#FINALIZAR EL ENVÍO
+if [[ $ENV_ARQ != "True" ]]; then exit; fi #FINALIZAR SOLICITUD SI NO ENVÍA ARCHIVOS
 if [[ ! -e $DIRETORIOKEY/key.fija ]]; then
 if [[ $(cat $DIRETORIOKEY/used 2>/dev/null) = "" ]]; then
-# at now + 1440 min <<< "rm -rf ${DIRETORIOKEY}*" # AGENDADOR!
+# at now + 1440 min <<< "rm -rf ${DIRETORIOKEY}*" # ¡PROGRAMADOR!
 echo "$USRIP" > $DIRETORIOKEY/used
 echo "$(date |cut -d' ' -f3,4)" > $DIRETORIOKEY/used.date
-fi #VERIFICA SE O IP E VARIAVEL
-#VERIFICA SE A KEY FIXA ESTA NO IP CORRETO
+fi #COMPROBAR SI LA IP ES VARIABLE
+#COMPRUEBA SI LA LLAVE FIJA ESTÁ EN LA IP CORRECTA
 if [[ $(cat $DIRETORIOKEY/used) != "$USRIP" ]]; then
-  #IP INVALIDO BLOQUEIA INSTALACAO
+  # BLOQUEO DE INSTALACIÓN CON IP NO VÁLIDA
   log="/etc/gerar-sh-log"
-  echo "USUARIO: $(cat $DIRETORIOKEY.name) IP FIXO: $(cat $DIRETORIOKEY/keyfixa) USOU IP: $USRIP" >> $log
-  echo "SUA KEY FIXA FOI BLOQUEADA" >> $log
+  echo "USUARIO: $(cat $DIRETORIOKEY.name) IP FIJA: $(cat $DIRETORIOKEY/keyfixa) UTILIZÓ IP: $USRIP" >> $log
+  echo "SU CLAVE FIJA HA SIDO BLOQUEADA" >> $log
   echo "-----------------------------------------------------" >> $log
   rm -rf ${DIRETORIOKEY}*
-  exit #KEY INVALIDA, FINALIZA REQUEST
+  exit #CLAVE NO VÁLIDA, FINALIZAR SOLICITUD
 fi
 fi
 (

@@ -84,21 +84,21 @@ echo "$MEU_IP2" > /etc/MEUIPADM
 }
 
 ofus () {
-unset server
-server=$(echo ${txt_ofuscatw}|cut -d':' -f1)
 unset txtofus
 number=$(expr length $1)
 for((i=1; i<$number+1; i++)); do
 txt[$i]=$(echo "$1" | cut -b $i)
 case ${txt[$i]} in
-".") txt[$i]="+";;
-"+") txt[$i]=".";;
+".") txt[$i]="x";;
+"x") txt[$i]=".";;
+"5") txt[$i]="s";;
+"s") txt[$i]="5";;
 "1") txt[$i]="@";;
 "@") txt[$i]="1";;
 "2") txt[$i]="?";;
 "?") txt[$i]="2";;
-"3") txt[$i]="%";;
-"%") txt[$i]="3";;
+"4") txt[$i]="0";;
+"0") txt[$i]="4";;
 "/") txt[$i]="K";;
 "K") txt[$i]="/";;
 esac
@@ -107,12 +107,11 @@ done
 echo "$txtofus" | rev
 }
 
-
 SCPT_DIR="/etc/SCRIPT"
 [[ ! -e ${SCPT_DIR} ]] && mkdir ${SCPT_DIR}
 INSTA_ARQUIVOS="ADMVPS.zip"
 DIR="/etc/http-shell"
-LIST="lista-arq"
+LIST="-SPVweN"
 P_SERVER="https://raw.githubusercontent.com/emirjorge/Iniciador/master/version"
 v1=$(curl -sSL "${P_SERVER}/v-new.log")
 v2=$(cat $SCPT_DIR/v-local.log)
