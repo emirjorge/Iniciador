@@ -3,7 +3,7 @@
 clear
 #[[ -e /etc/newadm-instalacao ]] && BASICINST="$(cat /etc/newadm-instalacao)" || BASICINST="ADMbot.sh C-SSR.sh Crear-Demo.sh PDirect.py PGet.py POpen.py PPriv.py PPub.py Shadowsocks-R.sh Shadowsocks-libev.sh Unlock-Pass-VULTR.sh apacheon.sh blockBT.sh budp.sh dns-netflix.sh   dropbear.sh fai2ban.sh gestor.sh menu message.txt openvpn.sh  ports.sh shadowsocks.sh sockspy.sh speed.sh speedtest.py squid.sh squidpass.sh ssl.sh tcp.sh ultrahost usercodes utils.sh v2ray.sh Proxy.sh"
 #[[ -e /etc/newadm-instalacao ]] &&  BASICINST="$(cat /etc/newadm-instalacao)" || BASICINST="ferramentas limitera menu_inst PPub.py speedtest.py usercodes ferramentascodes limiterb  menu-txt payloads ssl user-txt cabecalho ferramentas-txt limiter.sh trans verifica confdropbear get PDirect.py v-local.log idioma_geral MasterBin.sh PGet.py pwd.pwd ultrahost idioma_menuinst menu optimizador POpen.py shadowsocks.sh fai2ban menu_credito PPriv.py user"
-[[ -e /etc/newadm-instalacao ]] &&  BASICINST="$(cat /etc/newadm-instalacao)" || BASICINST="cabecalho ferramentas funciones.sh generar.sh http-server.py menu menu_credito menu_inst payloads PDirect.py PGet.py POpen.py PPriv.py PPub.py shadowsocks.sh ultrahost usercodes v-local.log"
+[[ -e /etc/newadm-instalacao ]] &&  BASICINST="$(cat /etc/newadm-instalacao)" || BASICINST="cabecalho ferramentas funciones.sh menu menu_credito menu_inst payloads PDirect.py PGet.py POpen.py PPriv.py PPub.py shadowsocks.sh ultrahost usercodes v-local.log"
 IVAR="/etc/http-instas"
 BARRA="\033[1;36m-----------------------------------------------------\033[0m"
 BARRA2="\033[1;31m=====================================================\033[0m"
@@ -180,7 +180,7 @@ if [[ $1 = 1 ]]; then
 		 linck=1
 		 key_ok
 elif [[ $1 = 3 ]]; then
-		# GERADOR KEYS
+		# GENERATOR KEYS
 		[[ ! -e ${DIR}/${KEY} ]] && mkdir ${DIR}/${KEY}
 		read -p "Nombre de usuario ( comprador de la key ): " nombrevalue
 		[[ -z $nombrevalue ]] && nombrevalue="SIN NOMBRE"
@@ -188,7 +188,7 @@ elif [[ $1 = 3 ]]; then
 		read -p "autorizar a generar key para generador [Y/N]: " -e -i n gen_gen
 		msg -bar
 		read -p "KEY DE ACTUALIZACIÓN?: [Y/N]: " -e -i n attGEN
-		[[ $(echo $nombrevalue|grep -w "FIXA") ]] && nombrevalue+=[GERADOR]
+		[[ $(echo $nombrevalue|grep -w "FIXA") ]] && nombrevalue+=[GENERATOR]
  		 for arqx in `ls $SCPT_DIR`; do
   			[[ -e ${DIR}/${KEY}/$arqx ]] && continue #ANULA ARQUIVO CASO EXISTA
   			cp ${SCPT_DIR}/$arqx ${DIR}/${KEY}/
@@ -338,8 +338,8 @@ keys="$keys retorno"
 let i++
 for arqs in `ls $DIR|grep -v "ERROR-KEY"|grep -v ".name"`; do
 arqsx=$(ofus "$IP:8888/$arqs/$LIST")
-if [[ $(cat ${DIR}/${arqs}.name|grep GERADOR) ]]; then
-echo -e "\033[1;31m[$i] $arqsx ($(cat ${DIR}/${arqs}.name))\033[1;32m ($(cat ${DIR}/${arqs}/keyfixa))\033[0m"
+if [[ $(cat ${DIR}/${arqs}.name|grep GENERATOR) ]]; then
+echo -e "\033[1;31m[$i] $arqsx ($(cat ${DIR}/${arqs}.name))\033[1;32m ($(cat ${DIR}/${arqs}/keyfija))\033[0m"
 keys="$keys $arqs"
 let i++
 fi
@@ -356,7 +356,7 @@ i=0
 for arqs in `ls $DIR|grep -v "ERROR-KEY"|grep -v ".name"`; do
 KEYDIR="$DIR/$arqs"
 rm $KEYDIR/*.x.c &> /dev/null
- if [[ $(cat ${DIR}/${arqs}.name|grep GERADOR) ]]; then #Keyen Atualiza
+ if [[ $(cat ${DIR}/${arqs}.name|grep GENERATOR) ]]; then #Keyen Atualiza
  rm ${KEYDIR}/${LIST}
    for arqx in `ls $SCPT_DIR`; do
     cp ${SCPT_DIR}/$arqx ${KEYDIR}/$arqx
@@ -492,10 +492,10 @@ rm /var/www/html/newlib && touch /var/www/html/newlib
 rm ${SCPT_DIR}/*.x.c &> /dev/null
 [[ -z $(ls $DIR|grep -v "ERROR-KEY") ]] && return
 for arqs in `ls $DIR|grep -v "ERROR-KEY"|grep -v ".name"`; do
-if [[ $(cat ${DIR}/${arqs}.name|grep GERADOR) ]]; then
+if [[ $(cat ${DIR}/${arqs}.name|grep GENERATOR) ]]; then
 var=$(cat ${DIR}/${arqs}.name)
-ip=$(cat ${DIR}/${arqs}/keyfixa)
-echo -ne "\033[1;31m[USUARIO]: (\033[1;32m${var%%[*]}\033[1;31m) \033[1;33m[GERADOR]:\033[1;32m ($ip)\033[0m"
+ip=$(cat ${DIR}/${arqs}/keyfija)
+echo -ne "\033[1;31m[USUARIO]: (\033[1;32m${var%%[*]}\033[1;31m) \033[1;33m[GENERATOR]:\033[1;32m ($ip)\033[0m"
 echo "$ip" >> /var/www/html/newlib && echo -e " \033[1;36m[ATUALIZADO]"
 fi
 done
